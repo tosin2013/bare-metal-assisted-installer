@@ -164,7 +164,7 @@ export CLUSTER_DEPLOYMENT="baremetal-testing"
 oc get agentclusterinstalls $CLUSTER_DEPLOYMENT-aci -o json -n assisted-installer | jq '.status.conditions[]'
 ```
 
-**Get status of machine once machine has started**
+**Get status of machine once machine has started**  
 *This will return blank until the cluster has registred*
 ```
 oc get agents.agent-install.openshift.io -n assisted-installer  -o=jsonpath='{range .items[*]}{"\n"}{.spec.clusterDeploymentName.name}{"\n"}{.status.inventory.hostname}{"\n"}{range .status.conditions[*]}{.type}{"\t"}{.message}{"\n"}{end}'
