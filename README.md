@@ -15,8 +15,9 @@ git clone https://github.com/tosin2013/bare-metal-assisted-installer.git
 ```
 ### cd into directory
 ```
-cd bare-metal-clusters-with-crc
+cd bare-metal-assisted-installer
 ```
+
 ### Generate sshkey for clusters
 `ssh-keygen`
 
