@@ -182,7 +182,7 @@ CLUSTER_ID=$(oc get agents.agent-install.openshift.io -n assisted-installer | gr
 oc -n assisted-installer patch agents.agent-install.openshift.io $CLUSTER_ID -p '{"spec":{"approved":true}}' --type merge
 ```
 
-**Monitor installation**
+**Monitor installation**  
 `You can also ssh into device using core username and the ssh key you created`
 ```
 $ oc get agents.agent-install.openshift.io -n assisted-installer
