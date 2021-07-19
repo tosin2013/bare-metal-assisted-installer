@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - 01-assisted-installer-agentserviceconfig.yaml
+  - 02-assisted-installer-clusterimageset.yaml
+  - 03-assisted-installer-secrets.yaml
+patchesStrategicMerge:
+- image-versions.yaml

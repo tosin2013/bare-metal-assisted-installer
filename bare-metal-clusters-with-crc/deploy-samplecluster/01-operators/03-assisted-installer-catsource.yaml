@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: assisted-installer
+  labels:
+    name: assisted-installer
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: assisted-service
+  namespace: openshift-marketplace
+spec:
+  sourceType: grpc
+  image: quay.io/ocpmetal/assisted-service-index:latest

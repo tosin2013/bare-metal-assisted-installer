@@ -1,0 +1,16 @@
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: InfraEnv
+metadata:
+  name: baremetal-testing-infraenv
+  namespace: assisted-installer
+spec:
+  clusterRef:
+    name: baremetal-testing
+    namespace: assisted-installer
+  sshAuthorizedKey: "ssh-rsa AAAAB3N"
+  agentLabelSelector:
+    matchLabels:
+      dc: atlanta
+  pullSecretRef:
+    name: assisted-deployment-pull-secret

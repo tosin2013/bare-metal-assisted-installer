@@ -1,0 +1,24 @@
+---
+apiVersion: hive.openshift.io/v1
+kind: ClusterDeployment
+metadata:
+  name: baremetal-testing
+  namespace: assisted-installer
+spec:
+  baseDomain: example.com
+  clusterName: baremetal-testing
+  controlPlaneConfig:
+    servingCertificates: {}
+  installed: false
+  clusterInstallRef:
+    group: extensions.hive.openshift.io
+    kind: AgentClusterInstall
+    name: baremetal-testing-aci
+    version: v1beta1
+  platform:
+    agentBareMetal:
+      agentSelector:
+        matchLabels:
+          dc: "atlanta"
+  pullSecretRef:
+    name: assisted-deployment-pull-secret

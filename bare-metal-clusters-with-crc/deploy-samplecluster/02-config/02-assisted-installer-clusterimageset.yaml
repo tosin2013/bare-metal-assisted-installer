@@ -1,0 +1,7 @@
+apiVersion: hive.openshift.io/v1
+kind: ClusterImageSet
+metadata:
+  name: openshift-v4.8.0
+  namespace: assisted-installer
+spec:
+  releaseImage: quay.io/openshift-release-dev/ocp-release:4.8.0-rc.3-x86_64
