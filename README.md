@@ -1,5 +1,5 @@
 # Deploy Bare-Metal Clusters via Hive and Assisted Installer
-The below instructions shows how to eploy a single node bare metal Openshift Cluster. Native OpenShift or CRC may be used when running the instuctions below. 
+The below instructions shows how to deploy a single node bare metal Openshift Cluster. Native OpenShift or CRC may be used when running the instuctions below. 
 
 # Requirements 
 * kustomize
