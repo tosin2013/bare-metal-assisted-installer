@@ -2,8 +2,8 @@
 # OpenShift pre-leases
 # https://openshift-release.apps.ci.l2s4.p1.openshiftapps.com/
 
-export OPENSHIFT_META_TAG="openshift-v4.8.0"
-export OPENSHIFT_VERSION="4.8.0"
+export OPENSHIFT_META_TAG="openshift-v4.8.3"
+export OPENSHIFT_VERSION="4.8.3"
 export RHCOS_ROOTFS_URL="quay.io/openshift-release-dev/ocp-release:${OPENSHIFT_VERSION}-x86_64"
 ####
 ## Pre-Release urls

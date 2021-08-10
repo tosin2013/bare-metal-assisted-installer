@@ -5,7 +5,13 @@ The below instructions shows how to eploy a single node bare metal Openshift Clu
 * kustomize
 ```
 curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
- sudo mv kustomize /usr/local/bin 
+sudo mv kustomize /usr/local/bin 
+```
+* OpenShift CLI
+```
+curl -OL https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/pre-steps/configure-openshift-packages.sh
+chmod +x configure-openshift-packages.sh
+./configure-openshift-packages.sh -i
 ```
 * OpenShift or CRC
 
@@ -77,7 +83,7 @@ kustomize build deploy-samplecluster/02-config | oc create -f -
 **edit and run scripts/clusteragent-settings.sh** 
 ```
 $ vi scripts/clusteragent-settings.sh
-export OPENSHIFT_META_TAG="openshift-v4.8.0"
+export OPENSHIFT_META_TAG="openshift-v4.8.3"
 export CLUSTER_NETWORK="10.128.0.0/14"
 export CLUSTER_NETWORK_HOST_PREFIX="23"
 export SERVICE_NETWORK="172.30.0.0/16"
@@ -86,6 +92,7 @@ export CLUSTER_DEPLOYMENT="baremetal-testing"
 
 ./scripts/clusteragent-settings.sh
 ```
+
 **edit and run scripts/clusterdeployment-settings.sh** 
 ```
 $ vi scripts/clusterdeployment-settings.sh
@@ -204,13 +211,13 @@ edge1.baremetal-testing      IN A 10.0.1.19
 ```
 $ export CLUSTER_DEPLOYMENT="baremetal-testing"
 
-$ mkdir -p auth
+$ mkdir -p ${HOME}/${CLUSTER_DEPLOYMENT}/auth
 
-$ oc get secret -n assisted-installer $CLUSTER_DEPLOYMENT-admin-kubeconfig -o json | jq -r '.data.kubeconfig' | base64 -d > auth/$CLUSTER_DEPLOYMENT-admin-kubeconfig
+$ oc get secret -n assisted-installer $CLUSTER_DEPLOYMENT-admin-kubeconfig -o json | jq -r '.data.kubeconfig' | base64 -d > ${HOME}/${CLUSTER_DEPLOYMENT}/auth/$CLUSTER_DEPLOYMENT-admin-kubeconfig
 
-$ oc get secret -n assisted-installer $CLUSTER_DEPLOYMENT-admin-password -o json | jq -r '.data.password' | base64 -d > auth/$CLUSTER_DEPLOYMENT-admin-password
+$ oc get secret -n assisted-installer $CLUSTER_DEPLOYMENT-admin-password -o json | jq -r '.data.password' | base64 -d > ${HOME}/${CLUSTER_DEPLOYMENT}/auth/$CLUSTER_DEPLOYMENT-admin-password
 
-$ export KUBECONFIG=auth/$CLUSTER_DEPLOYMENT-admin-kubeconfig 
+$ export KUBECONFIG=${HOME}/${CLUSTER_DEPLOYMENT}/auth/$CLUSTER_DEPLOYMENT-admin-kubeconfig 
 
 $ oc get co
 

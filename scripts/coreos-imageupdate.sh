@@ -1,12 +1,15 @@
 #!/bin/bash
-# OpenShift pre-leases
-# https://openshift-release.apps.ci.l2s4.p1.openshiftapps.com/
-
-export OPENSHIFT_VERSION="4.8.0"
+#####
+### OpenShift pre-leases
+### https://openshift-release.apps.ci.l2s4.p1.openshiftapps.com/
+### Openshift relases
+### https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/
+#####
+export OPENSHIFT_VERSION="4.8.2"
 export OPENSHIFT_VERSION_TAG="4.8"
-export RHCOS_VERSION="48.84.202107040900-0"
-export RHCOS_ROOTFS_URL="https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/pre-release/latest/rhcos-live-rootfs.x86_64.img"
-export RHCOS_ISO_URL="https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/pre-release/latest/rhcos-live.x86_64.iso"
+export RHCOS_VERSION="48.84.202107271439-0"
+export RHCOS_ROOTFS_URL="https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/rhcos-live-rootfs.x86_64.img"
+export RHCOS_ISO_URL="https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/rhcos-live.x86_64.iso"
 
 ####
 ## Pre-Release urls
@@ -30,3 +33,4 @@ spec:
         ${RHCOS_ISO_URL}
       version: ${RHCOS_VERSION}
 EOF
+
