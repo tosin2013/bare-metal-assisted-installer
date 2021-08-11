@@ -27,9 +27,23 @@ cd bare-metal-assisted-installer
 ### Generate sshkey for clusters
 `ssh-keygen`
 
+### Create Deployment folder 
+> Once the deployment has been complete you can check in the code into git.
+```
+./scripts/create-cluster-deployment.sh
+```
+
+### export Deployment name
+```
+$ source $HOME/env.variables 
+
+$ echo  echo $CLUSTER_DEPLOYMENT
+baremetal-testing
+```
+
 ### Deploy Operators
 ```
-kustomize build deploy-samplecluster/01-operators | oc create -f - 
+kustomize build  ${CLUSTER_DEPLOYMENT}/01-operators | oc create -f - 
 ```
 
 **Wait fo operators to load** 
@@ -37,25 +51,39 @@ kustomize build deploy-samplecluster/01-operators | oc create -f -
  ./scripts/operator-status.sh
 ```
 
-### Edit scripts and update configs
+### Configure the env.variables for the scripts below
+```
+$ ./scripts/get-openshift-versions.sh
+```
+
+### Edit scripts and update config
 **edit and run scripts/cluster-imageset.sh** 
 * You can find release versions [here](https://openshift-release.apps.ci.l2s4.p1.openshiftapps.com/)
+* You may also check the lastest stable release infomration [here]( https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/release.txt)
+
+> If you want to target a specific release manually update the variables in the script.
 ```
 $ vi scripts/cluster-imageset.sh
-export OPENSHIFT_META_TAG="openshift-v4.8.0"
-export OPENSHIFT_VERSION="4.8.0-rc.3"
-
+export OPENSHIFT_META_TAG="openshift-v4.8.4"
+export OPENSHIFT_VERSION="4.8.4"
+```
+> If you want to deploy the latest version of Openshift using the get-openshift-version.sh run the script below.
+```
 $ ./scripts/cluster-imageset.sh
 ```
 
 
 **edit and run scripts/coreos-imageupdate.sh** 
+> If you want to target a specific release manually update the variables in the script.
 ```
 $ vi ./scripts/coreos-imageupdate.sh
-export OPENSHIFT_VERSION="4.8.0-rc.3"
+export OPENSHIFT_VERSION="4.8.4"
 export OPENSHIFT_VERSION_TAG="4.8"
-export RHCOS_VERSION="48.84.202107040900-0"
+export RHCOS_VERSION=48.84.202107301701-0
+```
 
+> If you want to deploy the latest version of Openshift using the get-openshift-version.sh run the script below.
+```
 $ ./scripts/coreos-imageupdate.sh
 ```
 
@@ -70,55 +98,46 @@ vim $HOME/pullsecert.txt
 
 **validate kustomize results**
 ```
-kustomize build deploy-samplecluster/02-config
+kustomize build  ${CLUSTER_DEPLOYMENT}/02-config
 ```
 
 **Apply kustomize**
 ```
-kustomize build deploy-samplecluster/02-config | oc create -f - 
+kustomize build  ${CLUSTER_DEPLOYMENT}/02-config | oc create -f - 
 ```
 
 ### Configure deployment 
 
 **edit and run scripts/clusteragent-settings.sh** 
+> If you want to target a specific release manually or change the default ssh key used update the variables in the script.
 ```
 $ vi scripts/clusteragent-settings.sh
 export OPENSHIFT_META_TAG="openshift-v4.8.3"
-export CLUSTER_NETWORK="10.128.0.0/14"
-export CLUSTER_NETWORK_HOST_PREFIX="23"
-export SERVICE_NETWORK="172.30.0.0/16"
-export MACHINE_NETWORK="10.0.1.0/24"
-export CLUSTER_DEPLOYMENT="baremetal-testing"
+```
 
+> If you want to deploy the latest version of Openshift using the get-openshift-version.sh run the script below.
+```
 ./scripts/clusteragent-settings.sh
 ```
 
-**edit and run scripts/clusterdeployment-settings.sh** 
+**run scripts/clusterdeployment-settings.sh** 
 ```
-$ vi scripts/clusterdeployment-settings.sh
-export ASSISTED_AGENT_SELECTOR="atlanta"
-export CLUSTER_DEPLOYMENT="baremetal-testing"
-export CLUSTER_DOMAIN="example.com"
-
-./scripts/clusterdeployment-settings.sh
+$ ./scripts/clusterdeployment-settings.sh
 ```
 
-**edit and run scripts/infraenv-settings.sh** 
+**run scripts/infraenv-settings.sh** 
 ```
-export ASSISTED_AGENT_SELECTOR="atlanta"
-export CLUSTER_DEPLOYMENT="baremetal-testing"
-
 ./scripts/infraenv-settings.sh
 ```
 
 **validate kustomize results**
 ```
-kustomize build deploy-samplecluster/03-deployment
+kustomize build  ${CLUSTER_DEPLOYMENT}/03-deployment
 ```
 
 **Apply kustomize**
 ```
-kustomize build deploy-samplecluster/03-deployment | oc create -f - 
+kustomize build  ${CLUSTER_DEPLOYMENT}/03-deployment | oc create -f - 
 ```
 
 **Wait for assisted-service pod**
@@ -202,9 +221,9 @@ $ oc get agentclusterinstalls $CLUSTER_DEPLOYMENT-aci -o json -n assisted-instal
 
 ## Update DNS settings to access instance
 ```
-api.baremetal-testing IN A 10.0.1.19
-*.apps.baremetal-testing IN A 10.0.1.19
-edge1.baremetal-testing      IN A 10.0.1.19
+api.baremetal-testing IN A 192.168.1.19
+*.apps.baremetal-testing IN A 192.168.1.19
+edge1.baremetal-testing      IN A 192.168.1.19
 ```
 
 ## Access you OpenShift instance 
@@ -227,9 +246,9 @@ $ oc get co
 ## Troubleshooting
  * if a Device fails to deploy run the following to recreate an iso
 ```
-$ kustomize build deploy-samplecluster/03-deployment | oc delete -f - 
+$ kustomize build  ${CLUSTER_DEPLOYMENT}/03-deployment | oc delete -f - 
 $ sleep 60s
-$ kustomize build deploy-samplecluster/03-deployment | oc create -f - 
+$ kustomize build  ${CLUSTER_DEPLOYMENT}/03-deployment | oc create -f - 
 $ ./scripts/assisted-service-status.sh
 ```
 

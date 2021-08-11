@@ -7,8 +7,16 @@ then
   exit 1
 fi 
 
+if [ -f ${HOME}/env.variables ];
+then 
+  source  ${HOME}/env.variables
+else
+  export CLUSTER_DEPLOYMENT="deploy-samplecluster"
+fi
 
-cat << EOF > deploy-samplecluster/02-config/03-assisted-installer-secrets.yaml
+
+
+cat << EOF > ${CLUSTER_DEPLOYMENT}/02-config/03-assisted-installer-secrets.yaml
 apiVersion: v1
 kind: Secret
 metadata:

@@ -6,11 +6,18 @@ then
   exit 1
 fi
 
-export ASSISTED_AGENT_SELECTOR="atlanta"
-export CLUSTER_DEPLOYMENT="baremetal-testing"
-export ASSISTED_AGENT_LABEL="dc"
+if [ -f ${HOME}/env.variables ];
+then 
+  source  ${HOME}/env.variables
+else
+  ASSISTED_AGENT_SELECTOR=${ASSISTED_AGENT_SELECTOR:-"atlanta"}
+  read -p "Would you like to change the name of the cluster deployment Default->[baremetal-testing]: " CLUSTER_DEPLOYMENT
+  CLUSTER_DEPLOYMENT=${CLUSTER_DEPLOYMENT:-"baremetal-testing"}
+  read -p "Would you like to change agent label Default->[dc]: " ASSISTED_AGENT_LABEL
+  ASSISTED_AGENT_LABEL=${ASSISTED_AGENT_LABEL:-"dc"}
+fi
 
-cat << EOF > deploy-samplecluster/03-deployment/03-assisted-installer-infraenv.yaml
+cat << EOF > ${CLUSTER_DEPLOYMENT}/03-deployment/03-assisted-installer-infraenv.yaml
 ---
 apiVersion: agent-install.openshift.io/v1beta1
 kind: InfraEnv
