@@ -51,7 +51,7 @@ kustomize build  ${CLUSTER_DEPLOYMENT}/01-operators | oc create -f -
  ./scripts/operator-status.sh
 ```
 
-### Configure the env.variables for the scripts below
+### Collect the latset OpenShift version information for target cluster
 ```
 $ ./scripts/get-openshift-versions.sh
 ```
@@ -154,6 +154,7 @@ oc get infraenv ${CLUSTER_DEPLOYMENT}-infraenv -o jsonpath='{.status.isoDownload
 
 **Download iso**
 ```
+source $HOME/env.variables 
 DOWNLOAD_URL=$(oc get infraenv $CLUSTER_DEPLOYMENT-infraenv -o jsonpath='{.status.isoDownloadURL}' -n assisted-installer)
 
 cat >isodownloader.sh<<YAML
@@ -164,12 +165,6 @@ YAML
 
 **Load iso on baremetal cluster**
 
-**Press tab to edit boot config**
-
-**Use the command below to assign name to server on boot**
-```
-ip=::::edge1.baremetal-testing.example.com:eno1:dhcp nameserver=192.168.1.2 
-```
 
 **For pxe deployments**
 * install memdisk
@@ -183,6 +178,16 @@ ip=::::edge1.baremetal-testing.example.com:eno1:dhcp nameserver=192.168.1.2
                 append iso initrd=::boot/amd64/ai-install/1/ai-install.iso raw
             MENU END
 ```
+
+**Once iso is loaded on cluster access the boot config with the command below**
+**Press tab to edit boot config**
+
+**Use the command below to assign name to server on boot**
+```
+ip=::::edge1.baremetal-testing.example.com:eno1:dhcp nameserver=192.168.1.2 
+```
+> the baremetal-testing is the custer name in this example
+
 
 **Once machine has booted get collect agent info**
 ```
@@ -240,7 +245,7 @@ $ export KUBECONFIG=${HOME}/${CLUSTER_DEPLOYMENT}/auth/$CLUSTER_DEPLOYMENT-admin
 
 $ oc get co
 
-# oc whoami --show-console
+$ oc whoami --show-console
 ```
 
 ### POST Steps 
@@ -260,6 +265,10 @@ $ kustomize build  ${CLUSTER_DEPLOYMENT}/03-deployment | oc delete -f -
 $ sleep 60s
 $ kustomize build  ${CLUSTER_DEPLOYMENT}/03-deployment | oc create -f - 
 $ ./scripts/assisted-service-status.sh
+```
+* To remove assisted installer from OpenShift and the configration run the wipe-cluster script
+```
+$ ./scripts/wipe-cluster.sh
 ```
 
 ## Links: 
