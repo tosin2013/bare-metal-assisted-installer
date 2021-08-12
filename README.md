@@ -127,7 +127,7 @@ $ ./scripts/clusterdeployment-settings.sh
 
 **run scripts/infraenv-settings.sh** 
 ```
-./scripts/infraenv-settings.sh
+$ ./scripts/infraenv-settings.sh
 ```
 
 **validate kustomize results**
@@ -148,7 +148,7 @@ kustomize build  ${CLUSTER_DEPLOYMENT}/03-deployment | oc create -f -
 ## Provision baremetal node
 **Get download URL**
 ```
-export CLUSTER_DEPLOYMENT="baremetal-testing"
+source $HOME/env.variables 
 oc get infraenv ${CLUSTER_DEPLOYMENT}-infraenv -o jsonpath='{.status.isoDownloadURL}' -n assisted-installer
 ```
 
@@ -186,7 +186,7 @@ ip=::::edge1.baremetal-testing.example.com:eno1:dhcp nameserver=192.168.1.2
 
 **Once machine has booted get collect agent info**
 ```
-export CLUSTER_DEPLOYMENT="baremetal-testing"
+source $HOME/env.variables 
 oc get agentclusterinstalls $CLUSTER_DEPLOYMENT-aci -o json -n assisted-installer | jq '.status.conditions[]'
 ```
 
@@ -203,7 +203,7 @@ oc get agents.agent-install.openshift.io -n assisted-installer
 
 **Approve cluster**
 ```
-export CLUSTER_DEPLOYMENT="baremetal-testing"
+source $HOME/env.variables 
 CLUSTER_ID=$(oc get agents.agent-install.openshift.io -n assisted-installer | grep ${CLUSTER_DEPLOYMENT} | awk '{print $1}')
 oc -n assisted-installer patch agents.agent-install.openshift.io $CLUSTER_ID -p '{"spec":{"approved":true}}' --type merge
 ```
@@ -215,7 +215,7 @@ $ oc get agents.agent-install.openshift.io -n assisted-installer
 or
 $ oc get agents.agent-install.openshift.io -n assisted-installer  -o=jsonpath='{range .items[*]}{"\n"}{.spec.clusterDeploymentName.name}{"\n"}{.status.inventory.hostname}{"\n"}{range .status.conditions[*]}{.type}{"\t"}{.message}{"\n"}{end}'
 or 
-$ export CLUSTER_DEPLOYMENT="baremetal-testing"
+$ source $HOME/env.variables 
 $ oc get agentclusterinstalls $CLUSTER_DEPLOYMENT-aci -o json -n assisted-installer | jq '.status.conditions[]'
 ```
 
@@ -228,7 +228,7 @@ edge1.baremetal-testing      IN A 192.168.1.19
 
 ## Access you OpenShift instance 
 ```
-$ export CLUSTER_DEPLOYMENT="baremetal-testing"
+$ source $HOME/env.variables 
 
 $ mkdir -p ${HOME}/${CLUSTER_DEPLOYMENT}/auth
 
@@ -242,6 +242,16 @@ $ oc get co
 
 # oc whoami --show-console
 ```
+
+### POST Steps 
+**Move env.variables to cluster directory**
+```
+mv $HOME/env.variables ${CLUSTER_DEPLOYMENT}
+```
+
+**Optional push code configration to git**
+> Add the following to the git ignore file
+* ${CLUSTER_DEPLOYMENT}/02-config/03-assisted-installer-secrets.yaml
 
 ## Troubleshooting
  * if a Device fails to deploy run the following to recreate an iso
