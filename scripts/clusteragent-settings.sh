@@ -22,9 +22,12 @@ read -p "Would you like to change the serviceNetwork This changes the IP address
 SERVICE_NETWORK=${SERVICE_NETWORK:-"172.30.0.0/16"}
 read -p "Would you like to change the machineNetwork This changes the IP address blocks for machines. Default->[10.0.0.0/16]: " MACHINE_NETWORK
 MACHINE_NETWORK=${MACHINE_NETWORK:-"10.0.0.0/16"}
-read -p "Would you like to change the cluster deployment name This changes default name for eah cluster deployment. Default->[baremetal-testing]: " CLUSTER_DEPLOYMENT
-CLUSTER_DEPLOYMENT=${CLUSTER_DEPLOYMENT:-"baremetal-testing"}
 
+if [ -z ${CLUSTER_DEPLOYMENT} ];
+then 
+  read -p "Would you like to change the cluster deployment name This changes default name for eah cluster deployment. Default->[baremetal-testing]: " CLUSTER_DEPLOYMENT
+  CLUSTER_DEPLOYMENT=${CLUSTER_DEPLOYMENT:-"baremetal-testing"}
+fi 
 
 
 cat << EOF >  ${CLUSTER_DEPLOYMENT}/03-deployment/01-assisted-installer-agentclusterinstall.yaml
