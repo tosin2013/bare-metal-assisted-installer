@@ -15,8 +15,11 @@ read -p "Would you like to change the AgentSelector is a label selector used for
                           relevant custom resources with this cluster. (Agent, BareMetalHost,
                           etc). Default->[atlanta]: " ASSISTED_AGENT_SELECTOR
 ASSISTED_AGENT_SELECTOR=${ASSISTED_AGENT_SELECTOR:-"atlanta"}
-read -p "Would you like to change the name of the cluster deployment Default->[baremetal-testing]: " CLUSTER_DEPLOYMENT
-CLUSTER_DEPLOYMENT=${CLUSTER_DEPLOYMENT:-"baremetal-testing"}
+if [ -z ${CLUSTER_DEPLOYMENT} ];
+then 
+  read -p "Would you like to change the cluster deployment name This changes default name for eah cluster deployment. Default->[baremetal-testing]: " CLUSTER_DEPLOYMENT
+  CLUSTER_DEPLOYMENT=${CLUSTER_DEPLOYMENT:-"baremetal-testing"}
+fi 
 read -p "Enter the cluster domain this will be used for dns. Default->[example.com]: " CLUSTER_DOMAIN
 CLUSTER_DOMAIN=${CLUSTER_DOMAIN:-"example.com"}
 read -p "Would you like to change agent label Default->[dc]: " ASSISTED_AGENT_LABEL
